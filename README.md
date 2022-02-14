@@ -2,8 +2,6 @@ setup laravel-vue:
 - install php
 - install composer
 - install npm (nodejs)
-<br>
-<br>
 - `composer create-project laravel/laravel laravel-vue-crud`
 - `cd laravel-vue-crud`
 - `composer require laravel/ui`
