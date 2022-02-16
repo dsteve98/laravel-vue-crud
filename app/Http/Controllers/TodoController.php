@@ -10,7 +10,7 @@ class TodoController extends Controller
     public function addTodoTask(Request $request)
     {
         $newTodoTask = new Task();
-        $newTodoTask->description = $request->post('description');
+        $newTodoTask->description = $request->post('title');
         $newTodoTask->checked = 0;
 
         $newTodoTask->save();
@@ -20,17 +20,37 @@ class TodoController extends Controller
 
     public function showTodoTaskList()
     {
-        return \response()->json(Task::get()->toArray());
+        $taskList = Task::get();
+        $responsePayload = [];
+        foreach ($taskList as $task) {
+            /**
+             * @var \App\Models\Task $task
+             */
+            unset($temp);
+            $temp = $task->toArray();
+            $temp['status'] = ($temp['checked'] == 1 ? true: false);
+            $temp['title'] = $temp['description'];
+            unset($temp['checked']);
+            unset($temp['description']);
+            $responsePayload[] = $temp;
+        }
+        return \response()->json($responsePayload);
     }
 
     public function editTodoTaskDescription(Request $request)
     {
         $todoTask = Task::find($request->post('id'));
-        $todoTask->description = $request->post('description');
+        $todoTask->description = $request->post('title');
 
         $todoTask->save();
 
-        return \response()->json($todoTask->toArray());
+        $responseData = $todoTask->toArray();
+        $responseData['status'] = ($responseData['checked'] == 1 ? true: false);
+        $responseData['title'] = $responseData['description'];
+        unset($responseData['checked']);
+        unset($responseData['description']);
+
+        return \response()->json($responseData);
     }
 
     public function toggleTodoTaskCheck(int $id, int $checked)
@@ -47,7 +67,13 @@ class TodoController extends Controller
 
         $todoTask->save();
 
-        return \response()->json($todoTask->toArray());
+        $responseData = $todoTask->toArray();
+        $responseData['status'] = ($responseData['checked'] == 1 ? true: false);
+        $responseData['title'] = $responseData['description'];
+        unset($responseData['checked']);
+        unset($responseData['description']);
+
+        return \response()->json($responseData);
     }
 
     public function deleteTodoTask(int $id)
