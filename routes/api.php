@@ -19,4 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('add_todo', [TodoController::class, 'addTodoTask']);
 Route::get('get_todo_list', [TodoController::class, 'showTodoTaskList']);
+Route::post('edit_todo', [TodoController::class, 'editTodoTaskDescription']);
+Route::get('check_todo/{id}/{checked}', [TodoController::class, 'toggleTodoTaskCheck']);
+Route::get('delete_todo/{id}', [TodoController::class, 'deleteTodoTask']);
