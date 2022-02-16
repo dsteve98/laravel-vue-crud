@@ -15,7 +15,7 @@
               <input type="checkbox" :id="'list'+index" v-model="item.status">
               <label :for="'list'+index" :class="item.status ? 'done' : ''">{{ item.title }}</label>
               <span class="edit" @click="editList(index, item.title)">Edit</span>
-              <span class="delete" @click="deleteList(index)">Hapus</span>
+              <span class="delete" @click="deleteList(index, item.id)">Hapus</span>
             </template>
             <template v-if="index == edit">
               <form class="form">
@@ -32,20 +32,18 @@
 export default {
   data() {
     return {
-      list: [
-        {
-          status: false,
-          title: "Hello World"
-        },
-        {
-          status: false,
-          title: "Welcome to Todo"
-        }
-      ],
+      list: [],
       input: null,
       edit: null,
       input_edit: null,
     }
+  },
+  mounted(){
+    let url = '/api/get_todo_list'
+    axios.get(url).then((response) => {
+      console.log(response)
+      this.list = response.data
+    })
   },
   methods:{
     addList(){
@@ -53,8 +51,17 @@ export default {
         status: false,
         title: this.input 
       }
-      this.list.push(newList)
-      this.input = null;
+      let url = '/api/add_todo'
+      axios.post(url, newList).then((response) => {
+        console.log(response)
+        const todo = {
+          id: response.data.id,
+          status: response.data.checked,
+          title: response.data.description
+        }
+        this.list.push(todo)
+        this.input = null;
+      })
     },
     editList(index, title){
       this.edit = index
@@ -68,8 +75,12 @@ export default {
       this.edit = null
       this.input_edit = null
     },
-    deleteList(index){
-      this.list.splice(index, 1)
+    deleteList(index, id){
+      let url = '/api/delete_todo/' + id
+      axios.get(url).then((response) => {
+        console.log(response)
+        this.list.splice(index, 1)
+      })
     },
     sortASC(){
       this.list.sort((a, b) => a.title.localeCompare(b.title))
