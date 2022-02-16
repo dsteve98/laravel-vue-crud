@@ -15,7 +15,13 @@ class TodoController extends Controller
 
         $newTodoTask->save();
 
-        return \response()->json($newTodoTask->toArray());
+        $responseData = $newTodoTask->toArray();
+        $responseData['status'] = ($responseData['checked'] == 1 ? true: false);
+        $responseData['title'] = $responseData['description'];
+        unset($responseData['checked']);
+        unset($responseData['description']);
+
+        return \response()->json($responseData);
     }
 
     public function showTodoTaskList()
