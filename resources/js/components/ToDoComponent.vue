@@ -14,7 +14,7 @@
             <template v-if="index != edit">
               <input type="checkbox" :id="'list'+index" v-model="item.status" v-on:click="checkList(item.id,item.status)">
               <label :for="'list'+index" :class="item.status ? 'done' : ''">{{ item.title }}</label>
-              <span class="edit" @click="editList(index, item.title,item)">Edit</span>
+              <span class="edit" @click="editList(index, item.title)">Edit</span>
               <span class="delete" @click="deleteList(index, item.id)">Hapus</span>
             </template>
             <template v-if="index == edit">
