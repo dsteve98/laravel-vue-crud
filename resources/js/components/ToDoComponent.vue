@@ -54,12 +54,7 @@ export default {
       let url = '/api/add_todo'
       axios.post(url, newList).then((response) => {
         console.log(response)
-        const todo = {
-          id: response.data.id,
-          status: response.data.checked,
-          title: response.data.description
-        }
-        this.list.push(todo)
+        this.list.push(response.data)
         this.input = null;
       })
     },
