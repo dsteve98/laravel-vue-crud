@@ -12,9 +12,9 @@
         <ul class="list">
           <li v-for="(item, index) in list" :key="index">
             <template v-if="index != edit">
-              <input type="checkbox" :id="'list'+index" v-model="item.status">
+              <input type="checkbox" :id="'list'+index" v-model="item.status" v-on:click="checkList(item.id,item.status)">
               <label :for="'list'+index" :class="item.status ? 'done' : ''">{{ item.title }}</label>
-              <span class="edit" @click="editList(index, item.title)">Edit</span>
+              <span class="edit" @click="editList(index, item.title,item)">Edit</span>
               <span class="delete" @click="deleteList(index, item.id)">Hapus</span>
             </template>
             <template v-if="index == edit">
@@ -63,8 +63,13 @@ export default {
       this.input_edit = title
     },
     confirmEdit(){
+      let url='/api/edit_todo'
       this.list[this.edit].title = this.input_edit
-      this.cancelEdit()
+      axios.post(url,this.list[this.edit]).then((response) => {
+        console.log(response)
+        this.cancelEdit()
+      })
+      
     },
     cancelEdit(){
       this.edit = null
@@ -77,11 +82,17 @@ export default {
         this.list.splice(index, 1)
       })
     },
+    checkList(id,val){
+      let url= '/api/check_todo/'+ id +'/'+ (val ? '0':'1')
+      axios.get(url).then((response) => {
+        console.log(response)
+      })
+    },
     sortASC(){
-      this.list.sort((a, b) => a.title.localeCompare(b.title))
+      this.list.sort((a, b) => new Intl.Collator().compare(a.title,b.title))
     },
     sortDESC(){
-      this.list.sort((a, b) => b.title.localeCompare(a.title))
+      this.list.sort((a, b) => new Intl.Collator().compare(b.title,a.title))
     }
   }
 }
