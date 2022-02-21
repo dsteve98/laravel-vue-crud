@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use PDF;
 
 class TodoController extends Controller
 {
@@ -87,5 +88,14 @@ class TodoController extends Controller
         Task::destroy($id);
 
         return \response()->json('success');
+    }
+
+    public function downloadPdf(){
+        // tes library pdf
+        // $res = PDF::loadHTML('http://www.google.com')->download('task.pdf');
+
+        $taskList = Task::get();
+        $pdf = PDF::loadView('pdfview',compact('taskList'));
+        return $pdf->inline('userlist.pdf');
     }
 }

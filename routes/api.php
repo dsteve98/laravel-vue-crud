@@ -24,3 +24,5 @@ Route::get('get_todo_list', [TodoController::class, 'showTodoTaskList']);
 Route::post('edit_todo', [TodoController::class, 'editTodoTaskDescription']);
 Route::get('check_todo/{id}/{checked}', [TodoController::class, 'toggleTodoTaskCheck']);
 Route::get('delete_todo/{id}', [TodoController::class, 'deleteTodoTask']);
+
+Route::get('download_pdf', [TodoController::class, 'downloadPdf']);
